@@ -153,11 +153,11 @@ namespace NLog.Targets
             }
 
             // Make clone as the input IList will be reused on next call
-            AsyncLogEventInfo[] logEventsArray = new AsyncLogEventInfo[logEvents.Count];
-            logEvents.CopyTo(logEventsArray, 0);
+            AsyncLogEventInfo[] pendingLogEvents = new AsyncLogEventInfo[logEvents.Count];
+            logEvents.CopyTo(pendingLogEvents, 0);
 
-            var networkLogEvents = TranslateLogEvents(logEventsArray);
-            Send(networkLogEvents, logEventsArray, null);
+            var networkLogEvents = TranslateLogEvents(pendingLogEvents);
+            Send(networkLogEvents, pendingLogEvents, null);
         }
 
         /// <summary>
@@ -253,7 +253,7 @@ namespace NLog.Targets
             }
         }
 
-        private void Send(NLogEvents events, IList<AsyncLogEventInfo> asyncContinuations, AsyncContinuation flushContinuations)
+        private void Send(NLogEvents events, AsyncLogEventInfo[] asyncContinuations, AsyncContinuation flushContinuations)
         {
             if (!OnSend(events, asyncContinuations))
             {
@@ -269,7 +269,7 @@ namespace NLog.Targets
                     InternalLogger.Error(e.Error, "{0}: Error while sending", this);
 
                 // report error to the callers
-                for (int i = 0; i < asyncContinuations.Count; ++i)
+                for (int i = 0; i < asyncContinuations.Length; ++i)
                 {
                     asyncContinuations[i].Continuation(e.Error);
                 }
@@ -345,11 +345,11 @@ namespace NLog.Targets
                 lock (SyncRoot)
                 {
                     // clear inCall flag
-                    AsyncLogEventInfo[] bufferedEvents = _pendingSendBuffer.GetEventsAndClear();
-                    if (bufferedEvents.Length > 0)
+                    AsyncLogEventInfo[] pendingLogEvents = _pendingSendBuffer.GetEventsAndClear();
+                    if (pendingLogEvents.Length > 0)
                     {
-                        var networkLogEvents = TranslateLogEvents(bufferedEvents);
-                        Send(networkLogEvents, bufferedEvents, flushContinuation);
+                        var networkLogEvents = TranslateLogEvents(pendingLogEvents);
+                        Send(networkLogEvents, pendingLogEvents, flushContinuation);
                     }
                     else
                     {
