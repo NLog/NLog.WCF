@@ -4,7 +4,7 @@
     <TargetFrameworks>net46;net45;net35;netstandard1.3;netstandard1.5;netstandard2.0</TargetFrameworks>
     <RootNamespace>NLog</RootNamespace>
 
-    <VersionPrefix>5.0.0</VersionPrefix>
+    <VersionPrefix>5.2.0</VersionPrefix>
     <VersionSuffix></VersionSuffix>
 
     <AssemblyVersion>5.0.0.0</AssemblyVersion>
@@ -21,8 +21,12 @@
     <Copyright>Copyright (c) 2004-$(CurrentYear) NLog Project - https://nlog-project.org/ </Copyright>
 
     <PackageReleaseNotes>
-      Docs:
-      https://github.com/NLog/NLog/wiki/LogReceiverService-target
+Changes:
+- Fixed bug where is kept reference to LogEvent-array after reuse #6 
+- Updated to NLog v5.2.2
+      
+Docs:
+https://github.com/NLog/NLog/wiki/LogReceiverService-target
     </PackageReleaseNotes>
     <PackageTags>NLog;WCF;ServiceModel;logging;log</PackageTags>
     <PackageIcon>N.png</PackageIcon>
@@ -68,7 +72,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
-    <PackageReference Include="NLog" Version="5.0.0" />
+    <PackageReference Include="NLog" Version="5.2.2" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net46' or '$(TargetFramework)' == 'net45' or '$(TargetFramework)' == 'net35' ">
