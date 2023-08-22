@@ -52,8 +52,8 @@ namespace NLog.Targets
     [Target("LogReceiverService")]
     public class LogReceiverWebServiceTarget : Target
     {
-        private readonly LogEventInfoBuffer buffer = new LogEventInfoBuffer(10000, false, 10000);
-        private bool inCall;
+        private readonly LogEventInfoBuffer _pendingSendBuffer = new LogEventInfoBuffer(10000, false, 10000);
+        private bool _sendInProgress;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LogReceiverWebServiceTarget"/> class.
@@ -142,12 +142,12 @@ namespace NLog.Targets
         {
             // if web service call is being processed, buffer new events and return
             // lock is being held here
-            if (inCall)
+            if (_sendInProgress)
             {
                 for (int i = 0; i < logEvents.Count; ++i)
                 {
                     PrecalculateVolatileLayouts(logEvents[i].LogEvent);
-                    buffer.Append(logEvents[i]);
+                    _pendingSendBuffer.Append(logEvents[i]);
                 }
                 return;
             }
@@ -156,8 +156,8 @@ namespace NLog.Targets
             AsyncLogEventInfo[] logEventsArray = new AsyncLogEventInfo[logEvents.Count];
             logEvents.CopyTo(logEventsArray, 0);
 
-            var networkLogEvents = TranslateLogEvents(logEvents);
-            Send(networkLogEvents, logEvents, null);
+            var networkLogEvents = TranslateLogEvents(logEventsArray);
+            Send(networkLogEvents, logEventsArray, null);
         }
 
         /// <summary>
@@ -193,9 +193,9 @@ namespace NLog.Targets
             return stringIndex;
         }
 
-        private NLogEvents TranslateLogEvents(IList<AsyncLogEventInfo> logEvents)
+        private NLogEvents TranslateLogEvents(AsyncLogEventInfo[] logEvents)
         {
-            if (logEvents.Count == 0 && !LogManager.ThrowExceptions)
+            if (logEvents.Length == 0 && !LogManager.ThrowExceptions)
             {
                 InternalLogger.Error("{0}: LogEvents array is empty, sending empty event...", this);
                 return new NLogEvents();
@@ -223,8 +223,8 @@ namespace NLog.Targets
                 AddEventProperties(logEvents, networkLogEvents);
             }
 
-            networkLogEvents.Events = new NLogEvent[logEvents.Count];
-            for (int i = 0; i < logEvents.Count; ++i)
+            networkLogEvents.Events = new NLogEvent[logEvents.Length];
+            for (int i = 0; i < logEvents.Length; ++i)
             {
                 AsyncLogEventInfo ev = logEvents[i];
                 networkLogEvents.Events[i] = TranslateEvent(ev.LogEvent, networkLogEvents, stringTable);
@@ -280,7 +280,7 @@ namespace NLog.Targets
                 SendBufferedEvents(null);
             };
 
-            inCall = true;
+            _sendInProgress = true;
             client.ProcessLogMessagesAsync(events);
         }
 
@@ -345,7 +345,7 @@ namespace NLog.Targets
                 lock (SyncRoot)
                 {
                     // clear inCall flag
-                    AsyncLogEventInfo[] bufferedEvents = buffer.GetEventsAndClear();
+                    AsyncLogEventInfo[] bufferedEvents = _pendingSendBuffer.GetEventsAndClear();
                     if (bufferedEvents.Length > 0)
                     {
                         var networkLogEvents = TranslateLogEvents(bufferedEvents);
@@ -354,7 +354,7 @@ namespace NLog.Targets
                     else
                     {
                         // nothing in the buffer, clear in-call flag
-                        inCall = false;
+                        _sendInProgress = false;
                         if (flushContinuation != null)
                             flushContinuation(null);
                     }
