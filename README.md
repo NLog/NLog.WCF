@@ -29,4 +29,4 @@ NLog [WCF target](https://github.com/NLog/NLog/wiki/LogReceiverService-target) f
     LogManager.Setup().SetupExtensions(ext => ext.RegisterTarget<NLog.Targets.LogReceiverWebServiceTarget>());
     ```
 
-See the [NLog Wiki](https://github.com/NLog/NLog/wiki/LogReceiverService-target) for available options and examples.
+See also [NLog Wiki](https://github.com/NLog/NLog/wiki/LogReceiverService-target) for available options and examples.
