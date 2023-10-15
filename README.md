@@ -26,7 +26,9 @@ NLog [WCF target](https://github.com/NLog/NLog/wiki/LogReceiverService-target) f
     Alternative register from code using [fluent configuration API](https://github.com/NLog/NLog/wiki/Fluent-Configuration-API):
 
     ```xml
-    LogManager.Setup().SetupExtensions(ext => ext.RegisterTarget<NLog.Targets.LogReceiverWebServiceTarget>());
+    LogManager.Setup().SetupExtensions(ext => {
+       ext.RegisterTarget<NLog.Targets.LogReceiverWebServiceTarget>();
+    });
     ```
 
 See also [NLog Wiki](https://github.com/NLog/NLog/wiki/LogReceiverService-target) for available options and examples.
