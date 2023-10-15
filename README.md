@@ -23,23 +23,10 @@ NLog [WCF target](https://github.com/NLog/NLog/wiki/LogReceiverService-target) f
     </extensions>
     ```
 
-### How to use LogReceiverWebServiceTarget
+    Alternative register from code using [fluent configuration API](https://github.com/NLog/NLog/wiki/Fluent-Configuration-API):
 
-Use the target "LogReceiverService" in your nlog.config
+    ```xml
+    LogManager.Setup().SetupExtensions(ext => ext.RegisterTarget<NLog.Targets.LogReceiverWebServiceTarget>());
+    ```
 
-```xml
-<nlog>
-    <extensions>
-        <add assembly="NLog.WCF"/>
-    </extensions>
-    <targets>
-      <target xsi:type="LogReceiverService"
-              name="wcf"
-              endpointAddress="String">
-      </target>
-    </targets>
-    <rules>
-        <logger minLevel="Info" writeTo="wcf" />
-    </rules>
-</nlog>
-```
+See the [NLog Wiki](https://github.com/NLog/NLog/wiki/LogReceiverService-target) for available options and examples.
