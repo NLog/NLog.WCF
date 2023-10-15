@@ -4,7 +4,7 @@
     <TargetFrameworks>net46;net45;net35;netstandard1.3;netstandard1.5;netstandard2.0</TargetFrameworks>
     <RootNamespace>NLog</RootNamespace>
 
-    <VersionPrefix>5.2.0</VersionPrefix>
+    <VersionPrefix>5.2.1</VersionPrefix>
     <VersionSuffix></VersionSuffix>
 
     <AssemblyVersion>5.0.0.0</AssemblyVersion>
@@ -22,6 +22,7 @@
 
     <PackageReleaseNotes>
 Changes:
+- Added README.md to nuget-package
 - Fixed bug where is kept reference to LogEvent-array after reuse #6 
 - Updated to NLog v5.2.2
       
@@ -105,7 +106,7 @@ https://github.com/NLog/NLog/wiki/LogReceiverService-target
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="README.md" Pack="true" PackagePath="" />
+    <None Include="../../README.md" Pack="true" PackagePath="" />
     <None Include="N.png" Pack="true" PackagePath="" visible="false" />
   </ItemGroup>
   <Target Name="DownloadMissingContent" BeforeTargets="GenerateNuspec">
