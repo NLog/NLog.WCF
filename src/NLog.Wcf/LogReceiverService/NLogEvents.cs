@@ -100,14 +100,7 @@ namespace NLog.LogReceiverService
         /// </returns>
         public IList<LogEventInfo> ToEventInfo(string loggerNamePrefix)
         {
-            var result = new LogEventInfo[Events.Length];
-
-            for (int i = 0; i < result.Length; ++i)
-            {
-                result[i] = Events[i].ToEventInfo(this, loggerNamePrefix);
-            }
-
-            return result;
+            return ToEventInfoArray(loggerNamePrefix);
         }
 
         /// <summary>
@@ -119,6 +112,20 @@ namespace NLog.LogReceiverService
         public IList<LogEventInfo> ToEventInfo()
         {
             return ToEventInfo(string.Empty);
+        }
+
+        internal LogEventInfo[] ToEventInfoArray(string loggerNamePrefix)
+        {
+            var result = new LogEventInfo[Events.Length];
+            var hasPrefix = !string.IsNullOrEmpty(loggerNamePrefix);
+
+            for (int i = 0; i < result.Length; ++i)
+            {
+                var loggerName = Strings[Events[i].LoggerOrdinal];
+                result[i] = Events[i].ToEventInfo(this, hasPrefix ? (loggerNamePrefix + loggerName) : loggerName);
+            }
+
+            return result;
         }
     }
 }
