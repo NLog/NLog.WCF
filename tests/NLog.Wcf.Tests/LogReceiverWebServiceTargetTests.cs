@@ -74,7 +74,7 @@ namespace NLog.Wcf.Tests
 
             // Act
             var translateEvent = service.TranslateEvent(logEvent, nLogEvents, dict2);
-            var result = translateEvent.ToEventInfo(nLogEvents, "");
+            var result = translateEvent.ToEventInfo(nLogEvents, nLogEvents.Strings[translateEvent.LoggerOrdinal]);
 
             // Assert
             Assert.Equal("logger1", result.LoggerName);

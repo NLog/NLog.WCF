@@ -152,12 +152,17 @@ namespace NLog.LogReceiverService
         /// Converts the <see cref="NLogEvent"/> to <see cref="LogEventInfo"/>.
         /// </summary>
         /// <param name="context">The <see cref="NLogEvent"/> object this <see cref="NLogEvent" /> is part of..</param>
-        /// <param name="loggerNamePrefix">The logger name prefix to prepend in front of the logger name.</param>
+        /// <param name="loggerName">The logger name.</param>
         /// <returns>Converted <see cref="LogEventInfo"/>.</returns>
-        internal LogEventInfo ToEventInfo(NLogEvents context, string loggerNamePrefix)
+        internal LogEventInfo ToEventInfo(NLogEvents context, string loggerName)
         {
-            var result = new LogEventInfo(LogLevel.FromOrdinal(LevelOrdinal), loggerNamePrefix + context.Strings[LoggerOrdinal], context.Strings[MessageOrdinal]);
+            var result = new LogEventInfo(LogLevel.FromOrdinal(LevelOrdinal), loggerName, context.Strings[MessageOrdinal]);
             result.TimeStamp = new DateTime(context.BaseTimeUtc + TimeDelta, DateTimeKind.Utc).ToLocalTime();
+            if (!string.IsNullOrEmpty(context.ClientName))
+            {
+                result.Properties["ClientName"] = context.ClientName;
+            }
+
             for (int i = 0; i < context.LayoutNames.Count; ++i)
             {
                 string layoutName = context.LayoutNames[i];
