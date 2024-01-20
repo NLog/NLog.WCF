@@ -158,10 +158,6 @@ namespace NLog.LogReceiverService
         {
             var result = new LogEventInfo(LogLevel.FromOrdinal(LevelOrdinal), loggerName, context.Strings[MessageOrdinal]);
             result.TimeStamp = new DateTime(context.BaseTimeUtc + TimeDelta, DateTimeKind.Utc).ToLocalTime();
-            if (!string.IsNullOrEmpty(context.ClientName))
-            {
-                result.Properties["ClientName"] = context.ClientName;
-            }
 
             for (int i = 0; i < context.LayoutNames.Count; ++i)
             {

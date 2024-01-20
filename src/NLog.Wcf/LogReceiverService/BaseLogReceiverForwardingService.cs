@@ -64,6 +64,13 @@ namespace NLog.LogReceiverService
         public void ProcessLogMessages(NLogEvents events)
         {
             var logEvents = events.ToEventInfoArray(string.Empty);
+            if (!string.IsNullOrEmpty(events.ClientName))
+            {
+                foreach (var logEvent in logEvents)
+                {
+                    logEvent.Properties["ClientName"] = events.ClientName;
+                }
+            }
             ProcessLogMessages(logEvents);
         }
 
