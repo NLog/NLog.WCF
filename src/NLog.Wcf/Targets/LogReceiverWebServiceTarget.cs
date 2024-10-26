@@ -178,7 +178,6 @@ namespace NLog.Targets
         /// <returns></returns>
         private static int AddValueAndGetStringOrdinal(NLogEvents context, Dictionary<string, int> stringTable, string value)
         {
-
             if (value is null || !stringTable.TryGetValue(value, out var stringIndex))
             {
                 stringIndex = context.Strings.Count;
@@ -417,7 +416,15 @@ namespace NLog.Targets
 
             if (eventInfo.Exception != null)
             {
-                nlogEvent.ValueIndexes.Add(AddValueAndGetStringOrdinal(context, stringTable, eventInfo.Exception.ToString()));
+                var exception = eventInfo.Exception;
+#if !NET35
+                if (exception is AggregateException aggregateException)
+                {
+                    if (aggregateException.InnerExceptions?.Count == 1 && !(aggregateException.InnerExceptions[0] is AggregateException))
+                        exception = aggregateException.InnerExceptions[0];
+                }
+#endif
+                nlogEvent.ValueIndexes.Add(AddValueAndGetStringOrdinal(context, stringTable, exception.ToString()));
             }
 
             return nlogEvent;
