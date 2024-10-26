@@ -232,16 +232,16 @@ namespace NLog.Targets
             return networkLogEvents;
         }
 
-        private static void AddEventProperties(IList<AsyncLogEventInfo> logEvents, NLogEvents networkLogEvents)
+        private static void AddEventProperties(AsyncLogEventInfo[] logEvents, NLogEvents networkLogEvents)
         {
-            for (int i = 0; i < logEvents.Count; ++i)
+            foreach (var ev in logEvents)
             {
-                var ev = logEvents[i].LogEvent;
+                var logEvent = ev.LogEvent;
 
-                if (ev.HasProperties)
+                if (logEvent.HasProperties)
                 {
                     // add all event-level property names in 'LayoutNames' collection.
-                    foreach (var prop in ev.Properties)
+                    foreach (var prop in logEvent.Properties)
                     {
                         if (prop.Key is string propName && !networkLogEvents.LayoutNames.Contains(propName))
                         {
@@ -267,10 +267,9 @@ namespace NLog.Targets
                 if (e.Error != null)
                     InternalLogger.Error(e.Error, "{0}: Error while sending", this);
 
-                // report error to the callers
-                for (int i = 0; i < asyncContinuations.Length; ++i)
+                foreach (var logEvent in asyncContinuations)
                 {
-                    asyncContinuations[i].Continuation(e.Error);
+                    logEvent.Continuation(e.Error);
                 }
 
                 flushContinuations?.Invoke(e.Error);
