@@ -22,9 +22,9 @@
 
     <PackageReleaseNotes>
 Changes:
-- Added README.md to nuget-package
-- Fixed bug where is kept reference to LogEvent-array after reuse #6 
-- Updated to NLog v5.2.2
+- Removed unused WCF Duplex nuget-dependencies
+- BaseLogReceiverForwardingService now only include ClientName property when non-empty
+- LogReceiverWebServiceTarget now recognizes AggregateException and flatten when simple
       
 Docs:
 https://github.com/NLog/NLog/wiki/LogReceiverService-target
