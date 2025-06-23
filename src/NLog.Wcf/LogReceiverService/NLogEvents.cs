@@ -54,7 +54,7 @@ namespace NLog.LogReceiverService
         /// <value>The name of the client.</value>
         [DataMember(Name = "cli", Order = 0)]
         [XmlElement("cli", Order = 0)]
-        public string ClientName { get; set; }
+        public string? ClientName { get; set; }
 
         /// <summary>
         /// Gets or sets the base time (UTC ticks) for all events in the package.
@@ -71,7 +71,7 @@ namespace NLog.LogReceiverService
         [DataMember(Name = "lts", Order = 100)]
         [XmlArray("lts", Order = 100)]
         [XmlArrayItem("l")]
-        public StringCollection LayoutNames { get; set; }
+        public StringCollection? LayoutNames { get; set; }
 
         /// <summary>
         /// Gets or sets the collection of logger names.
@@ -80,7 +80,7 @@ namespace NLog.LogReceiverService
         [DataMember(Name = "str", Order = 200)]
         [XmlArray("str", Order = 200)]
         [XmlArrayItem("l")]
-        public StringCollection Strings { get; set; }
+        public StringCollection? Strings { get; set; }
 
         /// <summary>
         /// Gets or sets the list of events.
@@ -89,7 +89,7 @@ namespace NLog.LogReceiverService
         [DataMember(Name = "ev", Order = 1000)]
         [XmlArray("ev", Order = 1000)]
         [XmlArrayItem("e")]
-        public NLogEvent[] Events { get; set; }
+        public NLogEvent[]? Events { get; set; }
 
         /// <summary>
         /// Converts the events to sequence of <see cref="LogEventInfo"/> objects suitable for routing through NLog.
@@ -116,12 +116,21 @@ namespace NLog.LogReceiverService
 
         internal LogEventInfo[] ToEventInfoArray(string loggerNamePrefix)
         {
+            if (Events is null || Events.Length == 0)
+            {
+#if NET35
+                return new LogEventInfo[0];
+#else
+                return System.Array.Empty<LogEventInfo>();
+#endif
+            }
+
             var result = new LogEventInfo[Events.Length];
             var hasPrefix = !string.IsNullOrEmpty(loggerNamePrefix);
 
             for (int i = 0; i < result.Length; ++i)
             {
-                var loggerName = Strings[Events[i].LoggerOrdinal];
+                var loggerName = Strings?[Events[i].LoggerOrdinal] ?? string.Empty;
                 result[i] = Events[i].ToEventInfo(this, hasPrefix ? (loggerNamePrefix + loggerName) : loggerName);
             }
 

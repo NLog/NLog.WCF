@@ -42,7 +42,7 @@ namespace NLog.LogReceiverService
         /// Initializes a new instance of the <see cref="LogReceiverForwardingService"/> class.
         /// </summary>
         public LogReceiverForwardingService()
-            : this(null)
+            : this(LogManager.LogFactory)
         {
         }
 

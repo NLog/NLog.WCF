@@ -156,17 +156,17 @@ namespace NLog.LogReceiverService
         /// <returns>Converted <see cref="LogEventInfo"/>.</returns>
         internal LogEventInfo ToEventInfo(NLogEvents context, string loggerName)
         {
-            var result = new LogEventInfo(LogLevel.FromOrdinal(LevelOrdinal), loggerName, context.Strings[MessageOrdinal]);
+            var result = new LogEventInfo(LogLevel.FromOrdinal(LevelOrdinal), loggerName, context.Strings?[MessageOrdinal] ?? string.Empty);
             result.TimeStamp = new DateTime(context.BaseTimeUtc + TimeDelta, DateTimeKind.Utc).ToLocalTime();
-
-            for (int i = 0; i < context.LayoutNames.Count; ++i)
+            if (context.LayoutNames?.Count > 0)
             {
-                string layoutName = context.LayoutNames[i];
-                string layoutValue = context.Strings[ValueIndexes[i]];
-
-                result.Properties[layoutName] = layoutValue;
+                for (int i = 0; i < context.LayoutNames.Count; ++i)
+                {
+                    var layoutName = context.LayoutNames[i];
+                    var layoutValue = context.Strings?[ValueIndexes[i]];
+                    result.Properties[layoutName] = layoutValue;
+                }
             }
-
             return result;
         }
     }

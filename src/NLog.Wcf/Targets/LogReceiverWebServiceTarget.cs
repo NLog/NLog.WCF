@@ -77,15 +77,14 @@ namespace NLog.Targets
         /// </summary>
         /// <value>The endpoint address.</value>
         /// <docgen category='Connection Options' order='10' />
-        [RequiredParameter]
-        public virtual string EndpointAddress { get; set; }
+        public virtual Layout EndpointAddress { get; set; } = Layout.Empty;
 
         /// <summary>
         /// Gets or sets the name of the endpoint configuration in WCF configuration file.
         /// </summary>
         /// <value>The name of the endpoint configuration.</value>
         /// <docgen category='Connection Options' order='10' />
-        public string EndpointConfigurationName { get; set; }
+        public string EndpointConfigurationName { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets a value indicating whether to use binary message encoding.
@@ -104,7 +103,7 @@ namespace NLog.Targets
         /// </summary>
         /// <value>The client ID.</value>
         /// <docgen category='Payload Options' order='10' />
-        public Layout ClientId { get; set; }
+        public Layout ClientId { get; set; } = Layout.Empty;
 
         /// <summary>
         /// Gets the list of parameters.
@@ -119,6 +118,14 @@ namespace NLog.Targets
         /// </summary>
         /// <docgen category='Payload Options' order='10' />
         public bool IncludeEventProperties { get; set; }
+
+        /// <inheritdoc/>
+        protected override void InitializeTarget()
+        {
+            if (EndpointAddress is null || ReferenceEquals(EndpointAddress, Layout.Empty))
+                throw new NLogConfigurationException("LogReceiverWebServiceTarget EndpointAddress-property must be assigned. EndpointAddress is needed for WCF Client.");
+            base.InitializeTarget();
+        }
 
         /// <summary>
         /// Called when log events are being sent (test hook).
@@ -180,13 +187,13 @@ namespace NLog.Targets
         {
             if (value is null || !stringTable.TryGetValue(value, out var stringIndex))
             {
-                stringIndex = context.Strings.Count;
+                stringIndex = context.Strings?.Count ?? 0;
                 if (value != null)
                 {
                     //don't add null to the string table, that would crash
                     stringTable.Add(value, stringIndex);
                 }
-                context.Strings.Add(value);
+                context.Strings?.Add(value ?? string.Empty);
             }
 
             return stringIndex;
@@ -243,7 +250,7 @@ namespace NLog.Targets
                     // add all event-level property names in 'LayoutNames' collection.
                     foreach (var prop in logEvent.Properties)
                     {
-                        if (prop.Key is string propName && !networkLogEvents.LayoutNames.Contains(propName))
+                        if (prop.Key is string propName && networkLogEvents.LayoutNames?.Contains(propName) == false)
                         {
                             networkLogEvents.LayoutNames.Add(propName);
                         }
@@ -252,16 +259,20 @@ namespace NLog.Targets
             }
         }
 
-        private void Send(NLogEvents events, AsyncLogEventInfo[] asyncContinuations, AsyncContinuation flushContinuations)
+        private void Send(NLogEvents events, AsyncLogEventInfo[] asyncContinuations, AsyncContinuation? flushContinuations)
         {
+            if (asyncContinuations.Length == 0)
+                return;
+
             if (!OnSend(events, asyncContinuations))
             {
-                if (flushContinuations != null)
-                    flushContinuations(null);
+                flushContinuations?.Invoke(null);
                 return;
             }
 
-            var client = CreateLogReceiver();
+            var endPointAddress = RenderLogEvent(EndpointAddress, asyncContinuations[0].LogEvent);
+
+            var client = CreateLogReceiver(endPointAddress);
             client.ProcessLogMessagesCompleted += (sender, e) =>
             {
                 if (e.Error != null)
@@ -290,7 +301,7 @@ namespace NLog.Targets
         /// </summary>
         /// <returns></returns>
         /// <remarks>virtual is used by endusers</remarks>
-        protected virtual IWcfLogReceiverClient CreateLogReceiver()
+        protected virtual IWcfLogReceiverClient CreateLogReceiver(string endPointAddress)
         {
             WcfLogReceiverClient client;
 
@@ -308,11 +319,11 @@ namespace NLog.Targets
                     binding = new BasicHttpBinding();
                 }
 
-                client = new WcfLogReceiverClient(UseOneWayContract, binding, new EndpointAddress(EndpointAddress));
+                client = new WcfLogReceiverClient(UseOneWayContract, binding, new EndpointAddress(endPointAddress));
             }
             else
             {
-                client = new WcfLogReceiverClient(UseOneWayContract, EndpointConfigurationName, new EndpointAddress(EndpointAddress));
+                client = new WcfLogReceiverClient(UseOneWayContract, EndpointConfigurationName, new EndpointAddress(endPointAddress));
             }
 
             client.ProcessLogMessagesCompleted += ClientOnProcessLogMessagesCompleted;
@@ -336,7 +347,7 @@ namespace NLog.Targets
             }
         }
 
-        private void SendBufferedEvents(AsyncContinuation flushContinuation)
+        private void SendBufferedEvents(AsyncContinuation? flushContinuation)
         {
             try
             {
@@ -379,7 +390,9 @@ namespace NLog.Targets
         internal NLogEvent TranslateEvent(LogEventInfo eventInfo, NLogEvents context, Dictionary<string, int> stringTable)
         {
             var nlogEvent = new NLogEvent();
+#pragma warning disable CS0618 // Type or member is obsolete
             nlogEvent.Id = eventInfo.SequenceID;
+#pragma warning restore CS0618 // Type or member is obsolete
             nlogEvent.MessageOrdinal = AddValueAndGetStringOrdinal(context, stringTable, eventInfo.FormattedMessage);
             nlogEvent.LevelOrdinal = eventInfo.Level.Ordinal;
             nlogEvent.LoggerOrdinal = AddValueAndGetStringOrdinal(context, stringTable, eventInfo.LoggerName);
@@ -395,22 +408,24 @@ namespace NLog.Targets
             }
 
             // layout names beyond Parameters.Count are per-event property names.
-            for (int i = Parameters.Count; i < context.LayoutNames.Count; ++i)
+            if (context.LayoutNames?.Count > 0)
             {
-                string value;
-                object propertyValue;
-
-                if (eventInfo.HasProperties && eventInfo.Properties.TryGetValue(context.LayoutNames[i], out propertyValue))
+                for (int i = Parameters.Count; i < context.LayoutNames.Count; ++i)
                 {
-                    value = Convert.ToString(propertyValue, CultureInfo.InvariantCulture);
-                }
-                else
-                {
-                    value = string.Empty;
-                }
+                    string value;
 
-                int stringIndex = AddValueAndGetStringOrdinal(context, stringTable, value);
-                nlogEvent.ValueIndexes.Add(stringIndex);
+                    if (eventInfo.HasProperties && eventInfo.Properties.TryGetValue(context.LayoutNames[i], out var propertyValue))
+                    {
+                        value = Convert.ToString(propertyValue, CultureInfo.InvariantCulture);
+                    }
+                    else
+                    {
+                        value = string.Empty;
+                    }
+
+                    int stringIndex = AddValueAndGetStringOrdinal(context, stringTable, value);
+                    nlogEvent.ValueIndexes.Add(stringIndex);
+                }
             }
 
             if (eventInfo.Exception != null)

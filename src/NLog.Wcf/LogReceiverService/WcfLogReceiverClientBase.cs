@@ -98,17 +98,17 @@ namespace NLog.LogReceiverService
         /// <summary>
         /// Occurs when the log message processing has completed.
         /// </summary>
-        public event EventHandler<AsyncCompletedEventArgs> ProcessLogMessagesCompleted;
+        public event EventHandler<AsyncCompletedEventArgs>? ProcessLogMessagesCompleted;
 
         /// <summary>
         /// Occurs when Open operation has completed.
         /// </summary>
-        public event EventHandler<AsyncCompletedEventArgs> OpenCompleted;
+        public event EventHandler<AsyncCompletedEventArgs>? OpenCompleted;
 
         /// <summary>
         /// Occurs when Close operation has completed.
         /// </summary>
-        public event EventHandler<AsyncCompletedEventArgs> CloseCompleted;
+        public event EventHandler<AsyncCompletedEventArgs>? CloseCompleted;
 
 #if !NET35 && !NET40 && !NETSTANDARD
 
@@ -116,7 +116,7 @@ namespace NLog.LogReceiverService
         /// Gets or sets the cookie container.
         /// </summary>
         /// <value>The cookie container.</value>
-        public CookieContainer CookieContainer
+        public CookieContainer? CookieContainer
         {
             get
             {
@@ -151,7 +151,7 @@ namespace NLog.LogReceiverService
         /// Opens the client asynchronously.
         /// </summary>
         /// <param name="userState">User-specific state.</param>
-        public void OpenAsync(object userState)
+        public void OpenAsync(object? userState)
         {
             InvokeAsync(OnBeginOpen, null, OnEndOpen, OnOpenCompleted, userState);
         }
@@ -168,7 +168,7 @@ namespace NLog.LogReceiverService
         /// Closes the client asynchronously.
         /// </summary>
         /// <param name="userState">User-specific state.</param>
-        public void CloseAsync(object userState)
+        public void CloseAsync(object? userState)
         {
             InvokeAsync(OnBeginClose, null, OnEndClose, OnCloseCompleted, userState);
         }
@@ -187,7 +187,7 @@ namespace NLog.LogReceiverService
         /// </summary>
         /// <param name="events">The events to send.</param>
         /// <param name="userState">User-specific state.</param>
-        public void ProcessLogMessagesAsync(NLogEvents events, object userState)
+        public void ProcessLogMessagesAsync(NLogEvents events, object? userState)
         {
             InvokeAsync(
                 OnBeginProcessLogMessages,
@@ -220,7 +220,7 @@ namespace NLog.LogReceiverService
             return BeginProcessLogMessages(events, callback, asyncState);
         }
 
-        private object[] OnEndProcessLogMessages(IAsyncResult result)
+        private object[]? OnEndProcessLogMessages(IAsyncResult result)
         {
             EndProcessLogMessages(result);
             return null;
@@ -241,7 +241,7 @@ namespace NLog.LogReceiverService
             return ((ICommunicationObject)this).BeginOpen(callback, asyncState);
         }
 
-        private object[] OnEndOpen(IAsyncResult result)
+        private object[]? OnEndOpen(IAsyncResult result)
         {
             ((ICommunicationObject)this).EndOpen(result);
             return null;
@@ -262,7 +262,7 @@ namespace NLog.LogReceiverService
             return ((ICommunicationObject)this).BeginClose(callback, asyncState);
         }
 
-        private object[] OnEndClose(IAsyncResult result)
+        private object[]? OnEndClose(IAsyncResult result)
         {
             ((ICommunicationObject)this).EndClose(result);
             return null;

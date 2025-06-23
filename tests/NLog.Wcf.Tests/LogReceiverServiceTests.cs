@@ -33,13 +33,11 @@
 
 namespace NLog.Wcf.Tests
 {
+    using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
     using System.Threading;
-    using System;
-    using System.IO;
-    using Xunit;
-    using System.Data;
     using System.Runtime.Serialization;
     using System.ServiceModel;
     using System.ServiceModel.Description;
@@ -47,6 +45,7 @@ namespace NLog.Wcf.Tests
     using System.Xml.Serialization;
     using NLog.Layouts;
     using NLog.LogReceiverService;
+    using Xunit;
 
     public class LogReceiverServiceTests
     {
@@ -259,7 +258,7 @@ namespace NLog.Wcf.Tests
             RealTestLogReciever(true, true);
         }
 
-        private void RealTestLogReciever(bool useOneWayContract, bool binaryEncode)
+        private static void RealTestLogReciever(bool useOneWayContract, bool binaryEncode)
         {
             var logFactory = new LogFactory().Setup().LoadConfigurationFromXml($@"
           <nlog throwExceptions='true' autoLoadExtensions='true'>
@@ -272,14 +271,11 @@ namespace NLog.Wcf.Tests
                           useBinaryEncoding='{binaryEncode.ToString().ToLower()}'
                   
                           includeEventProperties='false'>
-                  <!--  <parameter name='key1' layout='testparam1'  type='String'/> -->
-               </target>
-
-                   
+                    <!--  <parameter name='key1' layout='testparam1'  type='String'/> -->
+                   </target>
                 </targets>
                 <rules>
                     <logger name='logger1' minlevel='Trace' writeTo='s1' />
-              
                 </rules>
             </nlog>").LogFactory;
 
@@ -292,7 +288,7 @@ namespace NLog.Wcf.Tests
         /// <param name="logFunc">function for logging the messages</param>
         /// <param name="logCheckFunc">function for checking the received messages</param>
         /// <param name="messageCount">message count for wait for listen and checking</param>
-        private void ExecLogRecieverAndCheck(Action<Logger> logFunc, Action<List<NLogEvents>> logCheckFunc, int messageCount, LogFactory logFactory)
+        private static void ExecLogRecieverAndCheck(Action<Logger> logFunc, Action<List<NLogEvents>> logCheckFunc, int messageCount, LogFactory logFactory)
         {
             Uri baseAddress = new Uri(logRecieverUrl);
 
@@ -360,7 +356,7 @@ namespace NLog.Wcf.Tests
 
             //we wait 10 ms, because after a cold boot, the messages are arrived in the same moment and the order can change.
             Thread.Sleep(10);
-            logger.Info(new InvalidConstraintException("boo"), "test 2");
+            logger.Info(new System.Data.InvalidConstraintException("boo"), "test 2");
         }
 
         public class LogReceiverMock : ILogReceiverServer, ILogReceiverOneWayServer

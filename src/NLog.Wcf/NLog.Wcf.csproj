@@ -1,14 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net46;net45;net35;netstandard1.3;netstandard1.5;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>net35;net46;netstandard2.0</TargetFrameworks>
     <RootNamespace>NLog</RootNamespace>
 
-    <VersionPrefix>5.2.2</VersionPrefix>
+    <VersionPrefix>6.0.0</VersionPrefix>
     <VersionSuffix></VersionSuffix>
 
-    <AssemblyVersion>5.0.0.0</AssemblyVersion>
-    <!-- AssemblyVersion must be fixed on 5.0.0.0 -->
+    <AssemblyVersion>6.0.0.0</AssemblyVersion>
+    <!-- AssemblyVersion must be fixed on 6.0.0.0 -->
     <AppVeyorBuildNumber>$(APPVEYOR_BUILD_NUMBER)</AppVeyorBuildNumber>
     <AppVeyorBuildNumber Condition="'$(AppVeyorBuildNumber)' == ''">0</AppVeyorBuildNumber>
     <FileVersion>$(VersionPrefix).$(AppVeyorBuildNumber)</FileVersion>
@@ -22,9 +22,9 @@
 
     <PackageReleaseNotes>
 Changes:
-- Removed unused WCF Duplex nuget-dependencies
-- BaseLogReceiverForwardingService now only include ClientName property when non-empty
-- LogReceiverWebServiceTarget now recognizes AggregateException and flatten when simple
+- Updated to NLog v6
+- Changed EndpointAddress to Layout
+- Update to nullable API
       
 Docs:
 https://github.com/NLog/NLog/wiki/LogReceiverService-target
@@ -43,6 +43,8 @@ https://github.com/NLog/NLog/wiki/LogReceiverService-target
 
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <Nullable>enable</Nullable>
+    <LangVersion>9.0</LangVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net46' ">
@@ -50,34 +52,16 @@ https://github.com/NLog/NLog/wiki/LogReceiverService-target
     <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net45' ">
-    <Title>NLog.Wcf for .NET Framework 4.5</Title>
-    <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net35' ">
-    <Title>NLog.Wcf for .NET Framework 3.5</Title>
-    <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
-    <Title>NLog.Wcf for NetStandard 1.3</Title>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.5' ">
-    <Title>NLog.Wcf for NetStandard 1.5</Title>
-  </PropertyGroup>
-
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
     <Title>NLog.Wcf for NetStandard 2.0</Title>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
-    <PackageReference Include="NLog" Version="5.2.2" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
+    <PackageReference Include="NLog" Version="6.0.1" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net46' or '$(TargetFramework)' == 'net45' or '$(TargetFramework)' == 'net35' ">
+  <ItemGroup Condition=" '$(TargetFrameworkIdentifier)' == '.NETFramework' ">
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
@@ -85,14 +69,7 @@ https://github.com/NLog/NLog/wiki/LogReceiverService-target
     <Reference Include="System.Xml" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.5' or '$(TargetFramework)' == 'netstandard1.3' ">
-    <PackageReference Include="System.Net.Security" Version="4.3.2" />
-    <PackageReference Include="System.Net.WebSockets.Client" Version="4.3.2" />
-    <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
-    <PackageReference Include="System.Xml.XmlSerializer" Version="4.3.0" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' or '$(TargetFramework)' == 'netstandard1.5' or '$(TargetFramework)' == 'netstandard1.3' ">
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
     <PackageReference Include="System.ServiceModel.Http" Version="4.5.3" />
     <PackageReference Include="System.ServiceModel.NetTcp" Version="4.5.3" />
     <PackageReference Include="System.ServiceModel.Primitives" Version="4.5.3" />

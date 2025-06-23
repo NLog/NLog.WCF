@@ -251,7 +251,7 @@ namespace NLog.LogReceiverService
         /// <summary>
         /// Occurs when Close operation has completed.
         /// </summary>
-        public event EventHandler<AsyncCompletedEventArgs> CloseCompleted
+        public event EventHandler<AsyncCompletedEventArgs>? CloseCompleted
         {
             add => ProxiedClient.CloseCompleted += value;
             remove => ProxiedClient.CloseCompleted -= value;
@@ -260,7 +260,7 @@ namespace NLog.LogReceiverService
         /// <summary>
         /// Occurs when the communication object completes its transition from the closing state into the closed state.
         /// </summary>
-        public event EventHandler Closed
+        public event EventHandler? Closed
         {
             add => ProxiedClient.Closed += value;
             remove => ProxiedClient.Closed -= value;
@@ -269,7 +269,7 @@ namespace NLog.LogReceiverService
         /// <summary>
         /// Occurs when the communication object first enters the closing state.
         /// </summary>
-        public event EventHandler Closing
+        public event EventHandler? Closing
         {
             add => ProxiedClient.Closing += value;
             remove => ProxiedClient.Closing -= value;
@@ -290,7 +290,7 @@ namespace NLog.LogReceiverService
         /// Gets or sets the cookie container.
         /// </summary>
         /// <value>The cookie container.</value>
-        public CookieContainer CookieContainer
+        public CookieContainer? CookieContainer
         {
             get => ProxiedClient.CookieContainer;
             set => ProxiedClient.CookieContainer = value;
@@ -388,7 +388,7 @@ namespace NLog.LogReceiverService
         /// <summary>
         /// Occurs when Open operation has completed.
         /// </summary>
-        public event EventHandler<AsyncCompletedEventArgs> OpenCompleted
+        public event EventHandler<AsyncCompletedEventArgs>? OpenCompleted
         {
             add => ProxiedClient.OpenCompleted += value;
             remove => ProxiedClient.OpenCompleted -= value;
@@ -397,7 +397,7 @@ namespace NLog.LogReceiverService
         /// <summary>
         /// Occurs when the communication object completes its transition from the opening state into the opened state.
         /// </summary>
-        public event EventHandler Opened
+        public event EventHandler? Opened
         {
             add => ProxiedClient.Opened += value;
             remove => ProxiedClient.Opened -= value;
@@ -406,7 +406,7 @@ namespace NLog.LogReceiverService
         /// <summary>
         /// Occurs when the communication object first enters the opening state.
         /// </summary>
-        public event EventHandler Opening
+        public event EventHandler? Opening
         {
             add => ProxiedClient.Opening += value;
             remove => ProxiedClient.Opening -= value;
@@ -434,7 +434,7 @@ namespace NLog.LogReceiverService
         /// <summary>
         /// Occurs when the log message processing has completed.
         /// </summary>
-        public event EventHandler<AsyncCompletedEventArgs> ProcessLogMessagesCompleted
+        public event EventHandler<AsyncCompletedEventArgs>? ProcessLogMessagesCompleted
         {
             add => ProxiedClient.ProcessLogMessagesCompleted += value;
             remove => ProxiedClient.ProcessLogMessagesCompleted -= value;

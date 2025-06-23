@@ -50,7 +50,6 @@ namespace NLog.Wcf.Tests
         }
 
         [Theory]
-        [InlineData(null)]
         [InlineData("")]
         [InlineData(" ")]
         [InlineData("message1")]
@@ -91,7 +90,7 @@ namespace NLog.Wcf.Tests
 
             var logger = new LogFactory().Setup().LoadConfiguration(cfg =>
             {
-                cfg.Configuration.AddRuleForAllLevels(target);
+                cfg.ForLogger().WriteTo(target);
             }).GetLogger("loggerName");
 
             logger.Info("message text");
@@ -117,7 +116,7 @@ namespace NLog.Wcf.Tests
 
             new LogFactory().Setup().LoadConfiguration(cfg =>
             {
-                cfg.Configuration.AddRuleForAllLevels(target);
+                cfg.ForLogger().WriteTo(target);
             });
 
             var exceptions = new List<Exception>();
@@ -167,7 +166,7 @@ namespace NLog.Wcf.Tests
 
             new LogFactory().Setup().LoadConfiguration(cfg =>
             {
-                cfg.Configuration.AddRuleForAllLevels(target);
+                cfg.ForLogger().WriteTo(target);
             });
 
             var exceptions = new List<Exception>();
@@ -234,13 +233,13 @@ namespace NLog.Wcf.Tests
                 {
                     Name = "NoEmptyEventLists_wrapper"
                 };
-                cfg.Configuration.AddRuleForAllLevels(asyncTarget);
+                cfg.ForLogger().WriteTo(asyncTarget);
             }).GetLogger("logger1");
 
             try
             {
                 logger.Info("message1");
-                Thread.Sleep(1000);
+                Assert.True(target.SendCompleted.Wait(10000));
                 Assert.Equal(1, target.SendCount);
             }
             finally
@@ -253,6 +252,8 @@ namespace NLog.Wcf.Tests
         {
             public NLogEvents LastPayload;
             public int SendCount;
+
+            public ManualResetEventSlim SendCompleted = new ManualResetEventSlim(false);
 
             public MyLogReceiverWebServiceTarget() : base()
             {
@@ -272,6 +273,7 @@ namespace NLog.Wcf.Tests
                     ac.Continuation(null);
                 }
 
+                SendCompleted.Set();
                 return false;
             }
         }
