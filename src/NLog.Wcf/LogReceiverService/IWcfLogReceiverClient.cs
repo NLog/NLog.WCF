@@ -47,17 +47,17 @@ namespace NLog.LogReceiverService
         /// <summary>
         /// Occurs when the log message processing has completed.
         /// </summary>
-        event EventHandler<AsyncCompletedEventArgs> ProcessLogMessagesCompleted;
+        event EventHandler<AsyncCompletedEventArgs>? ProcessLogMessagesCompleted;
 
         /// <summary>
         /// Occurs when Open operation has completed.
         /// </summary>
-        event EventHandler<AsyncCompletedEventArgs> OpenCompleted;
+        event EventHandler<AsyncCompletedEventArgs>? OpenCompleted;
 
         /// <summary>
         /// Occurs when Close operation has completed.
         /// </summary>
-        event EventHandler<AsyncCompletedEventArgs> CloseCompleted;
+        event EventHandler<AsyncCompletedEventArgs>? CloseCompleted;
 
         /// <summary>
         /// Enables the user to configure client and service credentials as well as service credential authentication settings for use on the client side of communication.
@@ -139,7 +139,7 @@ namespace NLog.LogReceiverService
         /// Gets or sets the cookie container.
         /// </summary>
         /// <value>The cookie container.</value>
-        CookieContainer CookieContainer { get; set; }
+        CookieContainer? CookieContainer { get; set; }
 #endif
     }
 }

@@ -44,7 +44,7 @@ namespace NLog.LogReceiverService
         /// Initializes a new instance of the <see cref="BaseLogReceiverForwardingService"/> class.
         /// </summary>
         protected BaseLogReceiverForwardingService()
-            : this(null)
+            : this(LogManager.LogFactory)
         {
         }
 
@@ -54,7 +54,7 @@ namespace NLog.LogReceiverService
         /// <param name="logFactory">The log factory.</param>
         protected BaseLogReceiverForwardingService(LogFactory logFactory)
         {
-            _logFactory = logFactory;
+            _logFactory = logFactory ?? LogManager.LogFactory;
         }
 
         /// <summary>
@@ -80,22 +80,14 @@ namespace NLog.LogReceiverService
         /// <param name="logEvents">The log events.</param>
         protected virtual void ProcessLogMessages(LogEventInfo[] logEvents)
         {
-            Logger logger = null;
+            Logger? logger = null;
             string lastLoggerName = string.Empty;
 
             foreach (var ev in logEvents)
             {
                 if (ev.LoggerName != lastLoggerName)
                 {
-                    if (_logFactory != null)
-                    {
-                        logger = _logFactory.GetLogger(ev.LoggerName);
-                    }
-                    else
-                    {
-                        logger = LogManager.GetLogger(ev.LoggerName);
-                    }
-
+                    logger = _logFactory.GetLogger(ev.LoggerName);
                     lastLoggerName = ev.LoggerName;
                 }
 
