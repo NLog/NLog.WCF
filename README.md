@@ -12,7 +12,7 @@ NLog [WCF target](https://github.com/NLog/NLog/wiki/LogReceiverService-target) f
     `Install-Package NLog.WCF` or in your csproj:
 
     ```xml
-    <PackageReference Include="NLog.WCF" Version="5.*" />
+    <PackageReference Include="NLog.WCF" Version="6.*" />
     ```
 
 2) Add to your nlog.config:
