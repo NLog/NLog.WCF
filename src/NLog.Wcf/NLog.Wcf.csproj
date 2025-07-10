@@ -66,14 +66,11 @@ https://github.com/NLog/NLog/wiki/LogReceiverService-target
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
     <PackageReference Include="System.ServiceModel.Http" Version="4.5.3" />
     <PackageReference Include="System.ServiceModel.NetTcp" Version="4.5.3" />
-    <PackageReference Include="System.ServiceModel.Primitives" Version="4.5.3" />
-    <PackageReference Include="System.Net.Http.WinHttpHandler" Version="4.5.4" />
   </ItemGroup>
 
   <PropertyGroup>
