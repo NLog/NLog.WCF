@@ -4,7 +4,7 @@
     <TargetFrameworks>net35;net46;netstandard2.0</TargetFrameworks>
     <RootNamespace>NLog</RootNamespace>
 
-    <VersionPrefix>6.0.0</VersionPrefix>
+    <VersionPrefix>6.0.2</VersionPrefix>
     <VersionSuffix></VersionSuffix>
 
     <AssemblyVersion>6.0.0.0</AssemblyVersion>
@@ -21,10 +21,11 @@
     <Copyright>Copyright (c) 2004-$(CurrentYear) NLog Project - https://nlog-project.org/ </Copyright>
 
     <PackageReleaseNotes>
-Changes:
-- Updated to NLog v6
-- Changed EndpointAddress to Layout
-- Update to nullable API
+ChangeLog:
+
+- Updated to NLog v6.0.2
+- Removed direct dependency on System.ServiceModel.Primitives
+- Removed direct dependency on System.Net.Http.WinHttpHandler
       
 Docs:
 https://github.com/NLog/NLog/wiki/LogReceiverService-target
@@ -46,6 +47,11 @@ https://github.com/NLog/NLog/wiki/LogReceiverService-target
     <Nullable>enable</Nullable>
     <LangVersion>9.0</LangVersion>
   </PropertyGroup>
+  
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net35' ">
+    <Title>NLog.Wcf for .NET Framework 3.5</Title>
+    <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
+  </PropertyGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net46' ">
     <Title>NLog.Wcf for .NET Framework 4.6</Title>
@@ -58,7 +64,7 @@ https://github.com/NLog/NLog/wiki/LogReceiverService-target
 
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
-    <PackageReference Include="NLog" Version="6.0.1" />
+    <PackageReference Include="NLog" Version="6.0.2" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFrameworkIdentifier)' == '.NETFramework' ">
