@@ -4,7 +4,6 @@ NLog [WCF target](https://github.com/NLog/NLog/wiki/LogReceiverService-target) f
 [![Version](https://badge.fury.io/nu/NLog.WCF.svg)](https://www.nuget.org/packages/NLog.WCF)
 [![AppVeyor](https://img.shields.io/appveyor/ci/nlog/NLog-WCF/master.svg)](https://ci.appveyor.com/project/nlog/NLog-WCF/branch/master)
 
-
 ### How to install
 
 1) Install the package
