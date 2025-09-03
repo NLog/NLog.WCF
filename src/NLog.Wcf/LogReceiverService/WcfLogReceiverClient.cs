@@ -1,35 +1,35 @@
-// 
-// Copyright (c) 2004-2021 Jaroslaw Kowalski <jaak@jkowalski.net>, Kim Christensen, Julian Verdurmen
-// 
+//
+// Copyright (c) 2004-2025 Jaroslaw Kowalski <jaak@jkowalski.net>, Kim Christensen, Julian Verdurmen
+//
 // All rights reserved.
-// 
-// Redistribution and use in source and binary forms, with or without 
-// modification, are permitted provided that the following conditions 
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions
 // are met:
-// 
-// * Redistributions of source code must retain the above copyright notice, 
-//   this list of conditions and the following disclaimer. 
-// 
+//
+// * Redistributions of source code must retain the above copyright notice,
+//   this list of conditions and the following disclaimer.
+//
 // * Redistributions in binary form must reproduce the above copyright notice,
 //   this list of conditions and the following disclaimer in the documentation
-//   and/or other materials provided with the distribution. 
-// 
-// * Neither the name of Jaroslaw Kowalski nor the names of its 
+//   and/or other materials provided with the distribution.
+//
+// * Neither the name of Jaroslaw Kowalski nor the names of its
 //   contributors may be used to endorse or promote products derived from this
-//   software without specific prior written permission. 
-// 
+//   software without specific prior written permission.
+//
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
-// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE 
-// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
 // CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
-// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
-// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
-// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
 // THE POSSIBILITY OF SUCH DAMAGE.
-// 
+//
 
 namespace NLog.LogReceiverService
 {
@@ -41,7 +41,7 @@ namespace NLog.LogReceiverService
     using System.ServiceModel.Description;
 
     /// <summary>
-    /// Log Receiver Client facade. It allows the use either of the one way or two way 
+    /// Log Receiver Client facade. It allows the use either of the one way or two way
     /// service contract using WCF through its unified interface.
     /// </summary>
     /// <remarks>
@@ -49,7 +49,7 @@ namespace NLog.LogReceiverService
     /// 1. change ProxiedClient to private field (instead of public property)
     /// 2. delegate members
     /// 3. change ProxiedClient back to public property.
-    /// 
+    ///
     /// </remarks>
     public sealed class WcfLogReceiverClient : IWcfLogReceiverClient
     {
@@ -120,10 +120,10 @@ namespace NLog.LogReceiverService
             ProxiedClient = useOneWay ? (IWcfLogReceiverClient)new WcfLogReceiverOneWayClient(binding, remoteAddress) : new WcfLogReceiverTwoWayClient(binding, remoteAddress);
         }
 
-#region delegating
+        #region delegating
 
         /// <summary>
-        /// Causes a communication object to transition immediately from its current state into the closed state.  
+        /// Causes a communication object to transition immediately from its current state into the closed state.
         /// </summary>
         public void Abort()
         {
@@ -134,7 +134,7 @@ namespace NLog.LogReceiverService
         /// Begins an asynchronous operation to close a communication object.
         /// </summary>
         /// <returns>
-        /// The <see cref="T:System.IAsyncResult"/> that references the asynchronous close operation. 
+        /// The <see cref="T:System.IAsyncResult"/> that references the asynchronous close operation.
         /// </returns>
         /// <param name="callback">The <see cref="T:System.AsyncCallback"/> delegate that receives notification of the completion of the asynchronous close operation.</param>
         /// <param name="state">An object, specified by the application, that contains state information associated with the asynchronous close operation.</param>
@@ -164,7 +164,7 @@ namespace NLog.LogReceiverService
         /// Begins an asynchronous operation to open a communication object.
         /// </summary>
         /// <returns>
-        /// The <see cref="T:System.IAsyncResult"/> that references the asynchronous open operation. 
+        /// The <see cref="T:System.IAsyncResult"/> that references the asynchronous open operation.
         /// </returns>
         /// <param name="callback">The <see cref="T:System.AsyncCallback"/> delegate that receives notification of the completion of the asynchronous open operation.</param>
         /// <param name="state">An object, specified by the application, that contains state information associated with the asynchronous open operation.</param>
@@ -179,7 +179,7 @@ namespace NLog.LogReceiverService
         /// Begins an asynchronous operation to open a communication object within a specified interval of time.
         /// </summary>
         /// <returns>
-        /// The <see cref="T:System.IAsyncResult"/> that references the asynchronous open operation. 
+        /// The <see cref="T:System.IAsyncResult"/> that references the asynchronous open operation.
         /// </returns>
         /// <param name="timeout">The <see cref="T:System.Timespan"/> that specifies how long the send operation has to complete before timing out.</param><param name="callback">The <see cref="T:System.AsyncCallback"/> delegate that receives notification of the completion of the asynchronous open operation.</param>
         /// <param name="state">An object, specified by the application, that contains state information associated with the asynchronous open operation.</param>
@@ -209,9 +209,8 @@ namespace NLog.LogReceiverService
         /// </summary>
         public ClientCredentials ClientCredentials => ProxiedClient.ClientCredentials;
 
-
         /// <summary>
-        /// Causes a communication object to transition from its current state into the closed state.  
+        /// Causes a communication object to transition from its current state into the closed state.
         /// </summary>
         /// <param name="timeout">The <see cref="T:System.Timespan"/> that specifies how long the send operation has to complete before timing out.</param>
         /// <exception cref="T:System.ServiceModel.CommunicationObjectFaultedException"><see cref="M:System.ServiceModel.ICommunicationObject.Close"/> was called on an object in the <see cref="F:System.ServiceModel.CommunicationState.Faulted"/> state.</exception>
@@ -222,7 +221,7 @@ namespace NLog.LogReceiverService
         }
 
         /// <summary>
-        /// Causes a communication object to transition from its current state into the closed state.  
+        /// Causes a communication object to transition from its current state into the closed state.
         /// </summary>
         /// <exception cref="T:System.ServiceModel.CommunicationObjectFaultedException"><see cref="M:System.ServiceModel.ICommunicationObject.Close"/> was called on an object in the <see cref="F:System.ServiceModel.CommunicationState.Faulted"/> state.</exception>
         /// <exception cref="T:System.TimeoutException">The default close timeout elapsed before the <see cref="T:System.ServiceModel.ICommunicationObject"/> was able to close gracefully.</exception>
@@ -348,7 +347,7 @@ namespace NLog.LogReceiverService
         public IClientChannel InnerChannel => ProxiedClient.InnerChannel;
 
         /// <summary>
-        /// Causes a communication object to transition from the created state into the opened state.  
+        /// Causes a communication object to transition from the created state into the opened state.
         /// </summary>
         /// <exception cref="T:System.ServiceModel.CommunicationException">The <see cref="T:System.ServiceModel.ICommunicationObject"/> was unable to be opened and has entered the <see cref="F:System.ServiceModel.CommunicationState.Faulted"/> state.</exception>
         /// <exception cref="T:System.TimeoutException">The default open timeout elapsed before the <see cref="T:System.ServiceModel.ICommunicationObject"/> was able to enter the <see cref="F:System.ServiceModel.CommunicationState.Opened"/> state and has entered the <see cref="F:System.ServiceModel.CommunicationState.Faulted"/> state.</exception>
@@ -448,8 +447,7 @@ namespace NLog.LogReceiverService
         /// </returns>
         public CommunicationState State => ProxiedClient.State;
 
-#endregion
-
+        #endregion
 
         /// <summary>
         /// Causes a communication object to transition from its current state into the closed state.

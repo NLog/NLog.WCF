@@ -26,7 +26,7 @@ ChangeLog:
 - Updated to NLog v6.0.2
 - Removed direct dependency on System.ServiceModel.Primitives
 - Removed direct dependency on System.Net.Http.WinHttpHandler
-      
+
 Docs:
 https://github.com/NLog/NLog/wiki/LogReceiverService-target
     </PackageReleaseNotes>
@@ -47,7 +47,7 @@ https://github.com/NLog/NLog/wiki/LogReceiverService-target
     <Nullable>enable</Nullable>
     <LangVersion>9.0</LangVersion>
   </PropertyGroup>
-  
+
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net35' ">
     <Title>NLog.Wcf for .NET Framework 3.5</Title>
     <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
