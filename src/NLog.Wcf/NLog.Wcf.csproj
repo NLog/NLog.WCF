@@ -4,7 +4,7 @@
     <TargetFrameworks>net35;net46;netstandard2.0</TargetFrameworks>
     <RootNamespace>NLog</RootNamespace>
 
-    <VersionPrefix>6.1.4</VersionPrefix>
+    <VersionPrefix>6.1.5</VersionPrefix>
     <VersionSuffix></VersionSuffix>
 
     <AssemblyVersion>6.0.0.0</AssemblyVersion>
@@ -23,8 +23,7 @@
     <PackageReleaseNotes>
 ChangeLog:
 
-- Updated to System.Security.Cryptography.Xml ver. 8.0.4 (Security fix)
-- Updated to NLog v6.1.4
+- Updated to System.Security.Cryptography.Xml ver. 8.0.5 (Security fix)
 
 Docs:
 https://github.com/NLog/NLog/wiki/LogReceiverService-target
@@ -62,7 +61,6 @@ https://github.com/NLog/NLog/wiki/LogReceiverService-target
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
     <PackageReference Include="NLog" Version="6.1.4" />
   </ItemGroup>
 
@@ -76,7 +74,7 @@ https://github.com/NLog/NLog/wiki/LogReceiverService-target
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
     <PackageReference Include="System.ServiceModel.Http" Version="8.1.2" />
     <PackageReference Include="System.ServiceModel.NetTcp" Version="8.1.2" />
-    <PackageReference Include="System.Security.Cryptography.Xml" Version="8.0.4" />
+    <PackageReference Include="System.Security.Cryptography.Xml" Version="8.0.5" />
   </ItemGroup>
 
   <PropertyGroup>
