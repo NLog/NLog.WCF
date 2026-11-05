@@ -3,6 +3,7 @@ NLog [WCF target](https://github.com/NLog/NLog/wiki/LogReceiverService-target) f
 
 [![Version](https://badge.fury.io/nu/NLog.WCF.svg)](https://www.nuget.org/packages/NLog.WCF)
 [![CI](https://github.com/NLog/NLog.WCF/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/NLog/NLog.WCF/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/NLog/NLog.WCF/graph/badge.svg?token=JA3UU7NOEQ)](https://codecov.io/gh/NLog/NLog.WCF)
 
 ### How to install
 
