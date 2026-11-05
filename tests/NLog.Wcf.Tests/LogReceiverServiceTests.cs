@@ -296,7 +296,8 @@ namespace NLog.Wcf.Tests
             var countdownEvent = new CountdownEvent(messageCount);
             var logReceiverMock = new LogReceiverMock(countdownEvent);
 
-            using (ServiceHost host = new ServiceHost(logReceiverMock, baseAddress))
+            var host = new ServiceHost(logReceiverMock, baseAddress);
+            try
             {
                 var behaviour = host.Description.Behaviors.Find<ServiceBehaviorAttribute>();
                 behaviour.InstanceContextMode = InstanceContextMode.Single;
@@ -330,9 +331,13 @@ namespace NLog.Wcf.Tests
                 logCheckFunc(received);
 
                 logFactory.Shutdown();
-
-                // Close the ServiceHost.
-                host.Close();
+            }
+            finally
+            {
+                if (host.State == CommunicationState.Faulted)
+                    host.Abort();
+                else if (host.State != CommunicationState.Closed)
+                    host.Close();
             }
         }
 
