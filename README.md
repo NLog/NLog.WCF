@@ -2,7 +2,8 @@
 NLog [WCF target](https://github.com/NLog/NLog/wiki/LogReceiverService-target) for sending LogEvents to NLog Receiver Service (using WCF or Web Services)
 
 [![Version](https://badge.fury.io/nu/NLog.WCF.svg)](https://www.nuget.org/packages/NLog.WCF)
-[![AppVeyor](https://img.shields.io/appveyor/ci/NLog/NLog-WCF/master.svg)](https://ci.appveyor.com/project/NLog/NLog-WCF/branch/master)
+[![CI](https://github.com/NLog/NLog.WCF/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/NLog/NLog.WCF/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/NLog/NLog.WCF/graph/badge.svg?token=JA3UU7NOEQ)](https://codecov.io/gh/NLog/NLog.WCF)
 
 ### How to install
 
